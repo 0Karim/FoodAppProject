@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import logoImg from '../assets/logo.jpg';
 import CartModal from './CartModal';
+import Button from './UI/Button.jsx';
 
 
 export default function Header(){
@@ -29,12 +30,12 @@ export default function Header(){
                 ref={modal} 
             />
             <header id="main-header">
-                <div id='title'>
+                <div id="title">
                     <h1>REACT FOOD</h1>
                     <img src={logoImg} alt='react-food' />
                 </div>
                 <nav>
-                    <button onClick={handleOpenCartClick}>Cart(3)</button>
+                    <Button textOnly onClick={handleOpenCartClick}>Cart (0)</Button>
                 </nav>
             </header>        
         </>
