@@ -1,16 +1,16 @@
 import { act, createContext, useReducer } from "react";
 
-const CartContext = createContext({
+export const CartContext = createContext({
     items:[],
     addItems: (item) => {},
-    removeItem : (id) => {}
+    removeItem : (item) => {}
 });
 
 
 function shoppingCartReducer(state, action){
-    if(action === 'ADD_ITEM'){
+    if(action.type === 'ADD_ITEM'){
         const updatedItems = [...state.items];
-        const existingCartItemIndex = updatedItems.findIndex((cartItem) => cartItem.id === action.payload);
+        const existingCartItemIndex = updatedItems.findIndex((cartItem) => cartItem.id === action.payload.id);
 
         if(existingCartItemIndex > -1){
             const existingItem = state.items[existingCartItemIndex];
@@ -20,20 +20,26 @@ function shoppingCartReducer(state, action){
             };
             updatedItems[existingCartItemIndex] = updatedItem;
         }else{
-            updatedItems.push({...action.item, quantity:1})
+            updatedItems.push(
+                {
+                    ...action.payload,
+                    quantity:1
+                })
         }
+        console.log('state after adding item: ');
+        console.log(state);        
         return {
             ...state,
             items: updatedItems
         };
     }
 
-    if(action === 'REMOVE_ITEM'){
-        const existingCartItemIndex = state.items.findIndex((item) => item.id === action.id);
+    if(action.type === 'REMOVE_ITEM'){
+        const existingCartItemIndex = state.items.findIndex((item) => item.id === action.payload.id);
         const existingCartItem = state.items[existingCartItemIndex];
         const updatedItems = [...state.items];
         
-        if (existingCartItem.quantity === 1) {
+        if (existingCartItem !== null && existingCartItem.quantity === 1) {
             updatedItems.splice(existingCartItemIndex, 1);        
         }else{
             const updatedItem = {
@@ -42,8 +48,14 @@ function shoppingCartReducer(state, action){
             };            
             updatedItems[existingCartItemIndex] = updatedItem;
         }
+        console.log('state after removing item: ');
+        console.log(state);
+        
         return { ...state, items: updatedItems };
     }
+
+        console.log('state after no action met: ');
+        console.log(state);            
 
     return state;
 }
@@ -54,17 +66,19 @@ export function CartContextProvider({children}){
     });
 
     function handleAddItemToCart(item){
+        console.log('adding item to cart');
+        console.log(item);
         //using useReducer
         shoppingCartDispatch({
             type:'ADD_ITEM',   
-            payload : id         
+            payload : item         
         });
     }
 
-    function handleRemoveItem(id){
+    function handleRemoveItem(item){
         shoppingCartDispatch({
             type:'REMOVE_ITEM',
-            payload: id
+            payload: item
         })
     }
 
@@ -75,10 +89,12 @@ export function CartContextProvider({children}){
     };
 
     return (
-        <CartContextProvider.Provider value={ctxValue}>
+        <CartContext.Provider value={ctxValue}>
             {children}
-        </CartContextProvider.Provider>
+        </CartContext.Provider>
+        // <CartContextProvider.Provider value={ctxValue}>
+        //     {children}
+        // </CartContextProvider.Provider>
     );
 }
 
-export default CartContext;

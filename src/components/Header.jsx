@@ -1,9 +1,12 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import logoImg from '../assets/logo.jpg';
 import CartModal from './CartModal';
+import { CartContext } from '../context/CartContext.jsx';
+
 export default function Header(){
     const modal = useRef();
-    const cartQuantity = 3;
+    const {items} = useContext(CartContext);
+    const cartQuantity = items.length;
 
     function handleOpenCartClick(){
         modal.current.open();
@@ -13,8 +16,8 @@ export default function Header(){
     if(cartQuantity > 0){
         modalActions=
         <>
-            <button>Close</button>
-            <button>Checkout</button>
+            <button className='button'>Close</button>
+            <button className='button'>Checkout</button>
         </>
     }
 
@@ -32,7 +35,7 @@ export default function Header(){
                     <img className='' src={logoImg} alt='react-food' />
                 </div>
                 <nav>
-                    <button onClick={handleOpenCartClick}>Cart(3)</button>
+                    <button className='text-button' onClick={handleOpenCartClick}>Cart({cartQuantity})</button>
                 </nav>
             </header>        
         </>
