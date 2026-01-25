@@ -2,22 +2,38 @@ import { useEffect, useState } from "react";
 import { fetchAvilabelMeals } from "../http.js";
 import ErrorPage from './Error.jsx';
 import MealItem from "./MealItem.jsx";
+import useHttp from "../hooks/useHttp.js";
 
+const requestConfig={}; //we create empty config for GET request to make it recreated every time the component is rendered
+ 
 export default function Meals(){
-    const[loadedMeals, setLoadedMeals] = useState([]);
+    //old code we will use cutom hook instead
+    // const[loadedMeals, setLoadedMeals] = useState([]);
 
-    useEffect(() => {
-        async function fetchMeals(){
-            const response = await fetch('http://localhost:3000/meals');
-            if(!response.ok){
+    // useEffect(() => {
+    //     async function fetchMeals(){
+    //         const response = await fetch('http://localhost:3000/meals');
+    //         if(!response.ok){
 
-            }
-            const meals = await response.json();        
-            setLoadedMeals(meals)
-        }
+    //         }
+    //         const meals = await response.json();        
+    //         setLoadedMeals(meals)
+    //     }
 
-        fetchMeals();
-    },[]);
+    //     fetchMeals();
+    // },[]);
+  
+    const {
+        data: loadedMeals, 
+        isLoading, 
+        error
+    } = useHttp('http://localhost:3000/meals', requestConfig  , []); //initial data is empty array
+
+    console.log(loadedMeals);
+
+    if(isLoading){
+        return <p>Fetching meals...</p>
+    }
 
     return (
         <ul id="meals">
