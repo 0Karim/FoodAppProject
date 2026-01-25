@@ -1,12 +1,17 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import logoImg from '../assets/logo.jpg';
 import CartModal from './CartModal';
 import Button from './UI/Button.jsx';
-
+import CartContext from '../store/CartContext.jsx';
 
 export default function Header(){
     const modal = useRef();
-    const cartQuantity = 3;
+    const cartCtx = useContext(CartContext);
+    // const cartQuantity = cartCtx.items.length;
+    //we call reduce to sum up the quantity of all items in the cart
+    const cartQuantity = cartCtx.items.reduce((totalNumberOfItems, item) => {
+        return totalNumberOfItems + item.quantity;
+    },0);    
 
     function handleOpenCartClick(){
         modal.current.open();
@@ -35,7 +40,7 @@ export default function Header(){
                     <img src={logoImg} alt='react-food' />
                 </div>
                 <nav>
-                    <Button textOnly onClick={handleOpenCartClick}>Cart (0)</Button>
+                    <Button textOnly onClick={handleOpenCartClick}>Cart ({cartQuantity})</Button>
                 </nav>
             </header>        
         </>
