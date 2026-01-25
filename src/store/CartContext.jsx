@@ -4,7 +4,8 @@ import { act, createContext, useReducer } from "react";
 const CartContext = createContext({
     items: [],
     addItem:(item) => {},
-    removeItem: (id) => {}
+    removeItem: (id) => {},
+    clearCart: () => {}
 });
 
 //#5 define the reducer function to handle cart actions
@@ -55,6 +56,11 @@ function cartReducer(state, action) {
             items: updatedItems
         };
     }
+
+    if(action.type === 'CLEAR_CART'){
+        return {...state, items: []};
+    }
+
     //return the updated state from the action
     return state; //unchanged
 }
@@ -78,11 +84,16 @@ export function CartContextProvider({ children }) {
         dispatchCartAction({type: 'REMOVE_ITEM', id: id});
     }
 
+    function clearCart(){
+        dispatchCartAction({type: 'CLEAR_CART'});
+    }
+
     //#6 pass cart state to cart context provider value to be passess it to all other components
     const cartContext={
         items: cart.items,
         addItem: addItem,
-        removeItem: removeItem
+        removeItem: removeItem,
+        clearCart: clearCart
     };
 
     console.log('CartContext');

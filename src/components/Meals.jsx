@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchAvilabelMeals } from "../http.js";
-import ErrorPage from './Error.jsx';
+import Error from './Error.jsx';
 import MealItem from "./MealItem.jsx";
 import useHttp from "../hooks/useHttp.js";
 
@@ -32,7 +32,11 @@ export default function Meals(){
     console.log(loadedMeals);
 
     if(isLoading){
-        return <p>Fetching meals...</p>
+        return <p className="center">Fetching meals...</p>
+    }
+
+    if(error){
+        return <Error title="failed to fetch meals" message={error}/>
     }
 
     return (
